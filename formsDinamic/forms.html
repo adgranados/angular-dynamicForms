@@ -1,0 +1,319 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Forms</title>
+	<!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+
+	<!-- Optional theme -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+
+	<script type="text/javascript" 
+	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0/angular.min.js"></script>
+	<script type="text/javascript" src="formsdinamic.js"></script>
+	<script type="text/javascript" src="directives.js"></script>
+	<script type="text/javascript" src="macros.js"></script>
+	<script type="text/javascript" src="forms.js"></script>
+	<style type="text/css">
+		form .module {
+			border: 2px solid black;
+			border-radius: 	10px;
+
+			padding: 	3px;
+			padding-top: 0px;
+
+			margin-bottom: 8px;
+
+		}
+		form .module header{
+			background-color: 	skyblue;
+			border-radius: 10px 10px 0px 0px;
+		}
+		form .module header h2{
+			margin-top: 3px;
+		}
+
+		form .module label{
+			width: 100%;
+		}
+		form .ng-valid {
+			color: 	blue;
+		}
+		form .ng-invalid{
+			border: solid red !important;
+			color: red;
+		}
+		form .ng-pristine{
+			border: solid green;
+		}
+		form .ng-dirty{
+			border: solid brown;
+		}
+	</style>
+</head>
+<body ng-app="formsdinamic">
+	<section ng-controller="makeForm as make" class="container">
+		<section class="row">
+			<form class="col-md-12" style="border:2px solid black; border-radius:10px; margin:3px; padding:5px" >
+				<h3 ng-click="show_objecttype = !show_objecttype">ObjectType</h3>
+				<div ng-show="show_objecttype">
+					<label>Action Name <input class="form-control" type="text" ng-model="forms.submit.text"></label>
+					<label>Form Name <input class="form-control" type="text" ng-model="forms.name"></label>
+				</div>
+			</form>
+		</section>
+		<section class="row" id="Module_form">
+			<section class="col-md-12" style="border:2px solid black; border-radius:10px; margin:3px; padding:5px">
+				<h3 > <span ng-click="show_module_create = !show_module_create" >Create Module</span>  <a class="btn btn-default" href="javascript:void(1)" ng-click="newModule()">New</a></h3>
+				<form ng-show="show_module_create" ng-submit="createModule()" >
+					<div class="row">
+						<label class="col-md-6"> Title <input class="form-control" required type="text" ng-model="module_data.title" placeholder="Title"></label>				 
+						<label class="col-md-6"> Name <input class="form-control" required type="text" ng-model="module_data.name" placeholder="Name"></label>				 
+					</div>
+					<div class="row">
+						<label class="col-md-6"> Type <select class="form-control"  ng-model="module_data.type" ng-options="module_type for module_type in module_types"></select></label>				 
+						<label class="col-md-6"> Open <input class="form-control" type="checkbox" ng-model="module_data.open" ></label>
+					</div>
+					<input class="col-md-12 btn btn-primary" ng-show="module_data.$$hashKey==undefined" type="submit" >				 
+				</form>
+			</section>
+		</section>
+		<section class="row" id="Modules_table">
+			<section class="col-md-12" style="border:2px solid black; border-radius:10px; margin:3px; padding:5px">
+				<h3 ng-click="show_modules_list=!show_modules_list">Modules List</h3>
+				<table ng-show="show_modules_list" style="width:100%" class="table table-striped">
+					<thead>
+						<tr>
+							<th>Module</th>
+							<th>Name</th>
+							<th>Type</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="module in forms.modules">
+							<td>{{module.title}}</td>
+							<td>{{module.name}}</td>
+							<td>{{module.type}}</td>
+							<td><a class="btn btn-default" href="javascript:void(1)" ng-click="selectModule(module)">Select</a></td>
+						</tr>
+					</tbody>
+				</table>
+			</section>
+		</section>
+		<section ng-show="module_data.$$hashKey!=undefined" class="row">
+			
+			<section class="col-md-12" style="border:2px solid black; border-radius:10px; margin:3px; padding:5px">
+
+				<h3><span ng-click="show_fields_form=!show_fields_form">Fields</span> <a class="btn btn-default" href="javascript:void(1)" ng-click="newField()">New</a></h3>
+				<form ng-show="show_fields_form" ng-submit="createField()">
+					<label>Id 	 <input type="text" class="form-control" ng-model="field_data.id"></label>
+					<label>Type  <select class="form-control"  ng-model="field_data.type" ng-options="field_type for field_type in field_types"></select></label>
+					<label>Label <input type="text" class="form-control" ng-model="field_data.label"></label>
+					<label>Model <input type="text" class="form-control" ng-model="field_data.model"></label>
+					<label>name  <input type="text" class="form-control" ng-model="field_data.name"></label>
+					<label>Cols  <input type="number" class="form-control" ng-model="field_data.cols"></label>
+
+					<input class="col-md-12 btn btn-primary" ng-show="field_data.$$hashKey==undefined" type="submit">
+
+					
+
+				</form>
+			</section>
+		</section>
+		<section ng-show="module_data.$$hashKey!=undefined" class="row">
+			<section class="col-md-12" style="border:2px solid black; border-radius:10px; margin:3px; padding:5px">
+				<h3 ng-click="show_fields_list=!show_fields_list">Fields List</h3>
+				<table ng-show="show_fields_list" style="width:100%" class="table table-striped" >
+					<tbody>
+						<tr>
+							<td>
+								<a class="btn btn-default" href="javascript:void()" ng-click="addRow()">Add Row </a>
+								<label>Row  
+									<input type="number" ng-model="row_selected" min=0 max="{{module_data.fields.rows.length -1}}">
+									{{row_selected}}
+								</label>
+							</td>
+						</tr>
+						<tr ng-if="module_data.fields != undefined" ng-repeat="row in module_data.fields.rows">
+							<td> ROw {{$index}}
+								<table style="width:100%" class="table table-striped">
+									<thead>
+										<tr>
+											<th>label</th>
+											<th>Type</th>
+											<th>Cols</th>
+											<th>Model</th>
+											<th>name</th>
+											<th>actions</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr ng-repeat="field in row">
+											<td>{{field.label}}</td>
+											<td>{{field.type}}</td>
+											<td>{{field.cols}}</td>
+											<td>{{field.model}}</td>
+											<td>{{field.name}}</td>
+											<td>
+												<a class="btn btn-default btn-xs" href="javascript:void(1)" ng-click="selectField(field)"> select</a>
+												<a class="btn btn-default btn-xs glyphicon glyphicon-arrow-up" href="javascript:void(1)" ng-click="up(field)"></a>
+												<a class="btn btn-default btn-xs glyphicon glyphicon-arrow-down" href="javascript:void(1)" ng-click="down(field)"></a>
+												<a class="btn btn-default btn-xs glyphicon glyphicon-arrow-left" href="javascript:void(1)" ng-click="moveleft(module_data,field)"></a>
+												<a class="btn btn-default btn-xs glyphicon glyphicon-arrow-right" href="javascript:void(1)" ng-click="moverigth(module_data,field)"></a>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</section>
+		</section>
+		{{forms.fields}}<br/>
+		<hr/>
+		{{data}}<br/>
+		<form name="form1" ng-submit="save()">
+			<h2>{{forms.name}}</h2>
+			<article ng-repeat="module in forms.modules" class="module">
+				<header ng-click="module.open = !module.open"> 
+					<h2>{{module.title}}</h2>
+				</header>
+				<div ng-switch="module.type" ng-show="module.open">
+					<div ng-switch-when="basic">
+						
+							<div class="row" ng-if="module.fields != undefined" ng-repeat="row in module.fields.rows">	
+								<div  class="col-md-{{field.cols}}" ng-repeat="field in row">
+									<label ng-switch="field.type">
+										{{field.label}} <span ng-show="!form1.{{field.name}}.$valid">Error de validacion</span><br />  
+										<input class="form-control" ng-switch-when="text" 		type="text"	 	ng-model="data[field.model][field.name]" macros macros-data="{{field.macros}}" required  name = "{{field.name}}">
+										<input class="form-control"	ng-switch-when="email" 		type="email" 	ng-model="data[field.model][field.name]" macros macros-data="{{field.macros}}" required  name = "{{field.name}}">
+										<input class="form-control"	ng-switch-when="number" 	type="number" 	ng-model="data[field.model][field.name]" macros macros-data="{{field.macros}}"  required  name = "{{field.name}}">
+										<input class="form-control"	ng-switch-when="date" 		type="date" 	ng-model="data[field.model][field.name]" macros macros-data="{{field.macros}}" required  name = "{{field.name}}">
+										<input class="form-control"	ng-switch-when="time" 		type="time" 	ng-model="data[field.model][field.name]" macros macros-data="{{field.macros}}" required  name = "{{field.name}}">
+										<input class="form-control" ng-switch-when="list"		type="text"		ng-model="data[field.model][field.name]" macros macros-data="{{field.macros}}" ng-list  required  name = "{{field.name}}">
+										<select class="form-control" ng-switch-when="select" 					ng-model="data[field.model][field.name]" macros macros-data="{{field.macros}}" 
+												ng-options="option.value as option.display for option in field.options" name ="{{field.name}}">
+										<select>
+										<input class="form-control" ng-switch-default type="{{field.type}}" 	ng-model="data[field.model][field.name]" macros macros-data="{{field.macros}}"  required name ="{{field.name}}" >
+									
+									</label>
+								</div>
+							</div>
+					</div>
+					<div ng-switch-when="hasmany">
+						<div class="row" ng-repeat="row in module.fields.rows">	
+							<div  class="col-md-{{field.cols}}" ng-repeat="field in row">
+								<label ng-switch="field.type">
+									{{field.label}} <span ng-show="!form1.{{field.name}}.$valid">Error de validacion</span><br />  
+									<input class="form-control" ng-switch-when="text" 		type="text"	 	ng-model="data[module.data.model][module.data.name][module.data.selected][field.name]" macros macros-data="{{field.macros}}" required  name = "{{field.name}}">
+									<input class="form-control"	ng-switch-when="email" 		type="email" 	ng-model="data[module.data.model][module.data.name][module.data.selected][field.name]" macros macros-data="{{field.macros}}" required  name = "{{field.name}}">
+									<input class="form-control"	ng-switch-when="number" 	type="number" 	ng-model="data[module.data.model][module.data.name][module.data.selected][field.name]" macros macros-data="{{field.macros}}" required  name = "{{field.name}}">
+									<input class="form-control"	ng-switch-when="date" 		type="date" 	ng-model="data[module.data.model][module.data.name][module.data.selected][field.name]" macros macros-data="{{field.macros}}" required  name = "{{field.name}}">
+									<input class="form-control"	ng-switch-when="time" 		type="time" 	ng-model="data[module.data.model][module.data.name][module.data.selected][field.name]" macros macros-data="{{field.macros}}" required  name = "{{field.name}}">
+									<input class="form-control" ng-switch-when="list"		type="text"		ng-model="data[module.data.model][module.data.name][module.data.selected][field.name]" macros macros-data="{{field.macros}}" ng-list  required  name = "{{field.name}}">
+									<select class="form-control" ng-switch-when="select" 					ng-model="data[module.data.model][module.data.name][module.data.selected][field.name]" macros macros-data="{{field.macros}}" 
+											ng-options="option.value as option.display for option in field.options" name ="{{field.name}}">
+									<select>
+									<input class="form-control" ng-switch-default type="{{field.type}}" 	ng-model="data[module.data.model][module.data.name][module.data.selected][field.name]" macros macros-data="{{field.macros}}"  required name ="{{field.name}}" >
+								
+								</label>
+							</div>
+						</div>
+						<table style="width:100%">
+							<thead>
+								<tr>
+									<th ng-repeat="display_col in module.display">{{display_col.header}}</th>
+									<th>Acciones</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="row in data[module.data.model][module.data.name]">
+									<td ng-repeat="display_col in module.display" >{{row[display_col.name]}}</td>
+									<td><a href="javascript:void(1)" ng-click="module.data.selected=$index">editar</a><td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div ng-switch-default>No se identifico el Modulo type</div>		
+				</div>
+			</article>
+			<input type="submit" value="{{forms.submit.text}}" class="btn btn-primary">	
+		</form>
+	</section>
+	<section ng-controller="formController as forms" class="container">
+		{{forms.fields}}<br/>
+		<hr/>
+		{{data}}<br/>
+		<form name="form1" ng-submit="save()">
+			<h2>{{forms.name}}</h2>
+			<article ng-repeat="module in forms.modules" class="module">
+				<header ng-click="module.open = !module.open"> 
+					<h2>{{module.title}}</h2>
+				</header>
+				<div ng-switch="module.type" ng-show="module.open">
+					<div ng-switch-when="basic">
+						<div class="row" ng-repeat="row in module.fields.rows">	
+							<div  class="col-md-{{field.cols}}" ng-repeat="field in row">
+								<label ng-switch="field.type">
+									{{field.label}} <span ng-show="!form1.{{field.name}}.$valid">Error de validacion</span><br />  
+									<input class="form-control" ng-switch-when="text" 		type="text"	 	ng-model="data[field.model][field.name]" macros macros-data="{{field.macros}}" required  name = "{{field.name}}">
+									<input class="form-control"	ng-switch-when="email" 		type="email" 	ng-model="data[field.model][field.name]" macros macros-data="{{field.macros}}" required  name = "{{field.name}}">
+									<input class="form-control"	ng-switch-when="number" 	type="number" 	ng-model="data[field.model][field.name]" macros macros-data="{{field.macros}}"  required  name = "{{field.name}}">
+									<input class="form-control"	ng-switch-when="date" 		type="date" 	ng-model="data[field.model][field.name]" macros macros-data="{{field.macros}}" required  name = "{{field.name}}">
+									<input class="form-control"	ng-switch-when="time" 		type="time" 	ng-model="data[field.model][field.name]" macros macros-data="{{field.macros}}" required  name = "{{field.name}}">
+									<input class="form-control" ng-switch-when="list"		type="text"		ng-model="data[field.model][field.name]" macros macros-data="{{field.macros}}" ng-list  required  name = "{{field.name}}">
+									<select class="form-control" ng-switch-when="select" 					ng-model="data[field.model][field.name]" macros macros-data="{{field.macros}}" 
+											ng-options="option.value as option.display for option in field.options" name ="{{field.name}}">
+									<select>
+									<input class="form-control" ng-switch-default type="{{field.type}}" 	ng-model="data[field.model][field.name]" macros macros-data="{{field.macros}}"  required name ="{{field.name}}" >
+								
+								</label>
+							</div>
+						</div>
+					</div>
+					<div ng-switch-when="hasmany">
+						<div class="row" ng-repeat="row in module.fields.rows">	
+							<div  class="col-md-{{field.cols}}" ng-repeat="field in row">
+								<label ng-switch="field.type">
+									{{field.label}} <span ng-show="!form1.{{field.name}}.$valid">Error de validacion</span><br />  
+									<input class="form-control" ng-switch-when="text" 		type="text"	 	ng-model="data[module.data.model][module.data.name][module.data.selected][field.name]" macros macros-data="{{field.macros}}" required  name = "{{field.name}}">
+									<input class="form-control"	ng-switch-when="email" 		type="email" 	ng-model="data[module.data.model][module.data.name][module.data.selected][field.name]" macros macros-data="{{field.macros}}" required  name = "{{field.name}}">
+									<input class="form-control"	ng-switch-when="number" 	type="number" 	ng-model="data[module.data.model][module.data.name][module.data.selected][field.name]" macros macros-data="{{field.macros}}" required  name = "{{field.name}}">
+									<input class="form-control"	ng-switch-when="date" 		type="date" 	ng-model="data[module.data.model][module.data.name][module.data.selected][field.name]" macros macros-data="{{field.macros}}" required  name = "{{field.name}}">
+									<input class="form-control"	ng-switch-when="time" 		type="time" 	ng-model="data[module.data.model][module.data.name][module.data.selected][field.name]" macros macros-data="{{field.macros}}" required  name = "{{field.name}}">
+									<input class="form-control" ng-switch-when="list"		type="text"		ng-model="data[module.data.model][module.data.name][module.data.selected][field.name]" macros macros-data="{{field.macros}}" ng-list  required  name = "{{field.name}}">
+									<select class="form-control" ng-switch-when="select" 					ng-model="data[module.data.model][module.data.name][module.data.selected][field.name]" macros macros-data="{{field.macros}}" 
+											ng-options="option.value as option.display for option in field.options" name ="{{field.name}}">
+									<select>
+									<input class="form-control" ng-switch-default type="{{field.type}}" 	ng-model="data[module.data.model][module.data.name][module.data.selected][field.name]" macros macros-data="{{field.macros}}"  required name ="{{field.name}}" >
+								
+								</label>
+							</div>
+						</div>
+						<table style="width:100%">
+							<thead>
+								<tr>
+									<th ng-repeat="display_col in module.display">{{display_col.header}}</th>
+									<th>Acciones</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="row in data[module.data.model][module.data.name]">
+									<td ng-repeat="display_col in module.display" >{{row[display_col.name]}}</td>
+									<td><a href="javascript:void(1)" ng-click="module.data.selected=$index">editar</a><td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div ng-switch-default></div>		
+				</div>
+			</article>
+			<input type="submit" value="{{forms.submit.text}}" class="btn btn-primary">	
+		</form>
+	</section>
+
+</body>
+</html>
