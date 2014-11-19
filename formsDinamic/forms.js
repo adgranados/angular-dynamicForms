@@ -20,7 +20,7 @@ formsapp.controller("makeForm",function($scope){
 							label:'field label',
 							model:'model',
 							name:'data',
-							cols:6
+							cols:5
 						},
 						{
 							id:2,
@@ -28,7 +28,7 @@ formsapp.controller("makeForm",function($scope){
 							label:'field 1 label',
 							model:'model',
 							name:'data1',
-							cols:3
+							cols:4
 						},
 						{
 							id:3,
@@ -37,6 +37,32 @@ formsapp.controller("makeForm",function($scope){
 							model:'model',
 							name:'data2',
 							cols:3
+						}
+					],
+					[
+						{
+							id:4,
+							type:'text',
+							label:'field 3 label',
+							model:'model',
+							name:'data',
+							cols:3
+						},
+						{
+							id:5,
+							type:'text',
+							label:'field 4 label',
+							model:'model',
+							name:'data1',
+							cols:4
+						},
+						{
+							id:6,
+							type:'text',
+							label:'field 5 label',
+							model:'model',
+							name:'data2',
+							cols:5
 						}
 					]
 				]
@@ -72,6 +98,26 @@ formsapp.controller("makeForm",function($scope){
 		$scope.module_data = module;
 	}
 
+	$scope.modulemoveup 	= function(form,module){
+
+			var pos = form.modules.indexOf(module)
+			if(pos>0){
+				var modulePosPrev = form.modules[pos -1];
+				var module =form.modules[pos];
+				form.modules[pos -1] = module;
+				form.modules[pos]= modulePosPrev;
+			}
+		
+	}
+	$scope.modulemovedown 	= function(form,module){
+			var pos = form.modules.indexOf(module)
+			if(pos<form.modules.length-1 && pos>=0){
+				var modulePosNext = form.modules[pos +1];
+				var module =form.modules[pos];
+				form.modules[pos +1] = module;
+				form.modules[pos]= modulePosNext;
+			}
+	}
 	// fields interaction
 	$scope.row_selected = 0;
 
@@ -97,7 +143,48 @@ formsapp.controller("makeForm",function($scope){
 
 		$scope.module_data.fields.rows[$scope.row_selected].push($scope.field_data);
 	}
-	$scope.moveleft = function(module,field){
+	//	move functions
+	$scope.fieldmoveup = function(module,field){
+		var rowPosition = -1
+		//buscando fila de posicion
+		for (i in module.fields.rows){
+			var row = module.fields.rows[i]
+			if(row.indexOf(field)>=0)
+				rowPosition = parseInt(i)
+		}
+		if(rowPosition > 0){
+			var row = module.fields.rows[rowPosition]
+			var rowlast = module.fields.rows[rowPosition-1]
+			var rowPosition = row.indexOf(field);
+			var reffield = row[rowPosition];
+			row[rowPosition] = undefined;
+			row.splice(rowPosition, 1);
+			rowlast.push(reffield);
+		}
+
+
+	}
+	$scope.fieldmovedown = function(module,field){
+		var rowPosition = parseInt(module.fields.rows.length) -1;
+		//buscando fila de posicion
+		for (i in module.fields.rows){
+			var row = module.fields.rows[i]
+			if(row.indexOf(field)>=0)
+				rowPosition = parseInt(i)
+		}
+		if(rowPosition < module.fields.rows.length -1){
+			var row = module.fields.rows[rowPosition]
+			var rownext = module.fields.rows[rowPosition+1]
+			var fieldPosition = row.indexOf(field);
+			var reffield = row[fieldPosition];
+			row[fieldPosition] = undefined;
+			row.splice(fieldPosition, 1);
+			rownext.push(reffield);
+		}
+
+
+	}
+	$scope.fieldmoveleft = function(module,field){
 
 		for (i in module.fields.rows){
 			var row = module.fields.rows[i]
@@ -110,7 +197,7 @@ formsapp.controller("makeForm",function($scope){
 			}
 		}
 	}
-	$scope.moverigth = function(module,field){
+	$scope.fieldmoverigth = function(module,field){
 
 		for (i in module.fields.rows){
 			var row = module.fields.rows[i]

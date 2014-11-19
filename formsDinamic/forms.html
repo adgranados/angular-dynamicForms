@@ -93,10 +93,14 @@
 					</thead>
 					<tbody>
 						<tr ng-repeat="module in forms.modules">
-							<td>{{module.title}}</td>
-							<td>{{module.name}}</td>
-							<td>{{module.type}}</td>
-							<td><a class="btn btn-default" href="javascript:void(1)" ng-click="selectModule(module)">Select</a></td>
+							<td><input class="form-control" type="text" ng-model="module.title"></td>
+							<td><input class="form-control" type="text" ng-model="module.name"></td>
+							<td><select class="form-control"  ng-model="module.type" ng-options="module_type for module_type in module_types"></select></td>
+							<td>
+								<a class="btn btn-default btn-xs" href="javascript:void(1)" ng-click="selectModule(module)">Select</a>
+								<a class="btn btn-default btn-xs glyphicon glyphicon-arrow-up" href="javascript:void(1)" ng-click="modulemoveup(forms,module)"></a>
+								<a class="btn btn-default btn-xs glyphicon glyphicon-arrow-down" href="javascript:void(1)" ng-click="modulemovedown(forms,module)"></a>
+							</td>
 						</tr>
 					</tbody>
 				</table>
@@ -151,17 +155,17 @@
 									</thead>
 									<tbody>
 										<tr ng-repeat="field in row">
-											<td>{{field.label}}</td>
-											<td>{{field.type}}</td>
-											<td>{{field.cols}}</td>
-											<td>{{field.model}}</td>
-											<td>{{field.name}}</td>
+											<td><input type="text" ng-model="field.label"></td>
+											<td><select class="form-control"  ng-model="field.type" ng-options="field_type for field_type in field_types"></select></td>
+											<td><input type="number" ng-model="field.cols"></td>
+											<td><input type="text" ng-model="field.model"></td>
+											<td><input type="text" ng-model="field.name"></td>
 											<td>
 												<a class="btn btn-default btn-xs" href="javascript:void(1)" ng-click="selectField(field)"> select</a>
-												<a class="btn btn-default btn-xs glyphicon glyphicon-arrow-up" href="javascript:void(1)" ng-click="up(field)"></a>
-												<a class="btn btn-default btn-xs glyphicon glyphicon-arrow-down" href="javascript:void(1)" ng-click="down(field)"></a>
-												<a class="btn btn-default btn-xs glyphicon glyphicon-arrow-left" href="javascript:void(1)" ng-click="moveleft(module_data,field)"></a>
-												<a class="btn btn-default btn-xs glyphicon glyphicon-arrow-right" href="javascript:void(1)" ng-click="moverigth(module_data,field)"></a>
+												<a class="btn btn-default btn-xs glyphicon glyphicon-arrow-up" href="javascript:void(1)" ng-click="fieldmoveup(module_data,field)"></a>
+												<a class="btn btn-default btn-xs glyphicon glyphicon-arrow-down" href="javascript:void(1)" ng-click="fieldmovedown(module_data,field)"></a>
+												<a class="btn btn-default btn-xs glyphicon glyphicon-arrow-left" href="javascript:void(1)" ng-click="fieldmoveleft(module_data,field)"></a>
+												<a class="btn btn-default btn-xs glyphicon glyphicon-arrow-right" href="javascript:void(1)" ng-click="fieldmoverigth(module_data,field)"></a>
 											</td>
 										</tr>
 									</tbody>
