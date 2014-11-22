@@ -226,6 +226,20 @@ formsapp.controller("makeForm",function($scope){
 		$scope.field_data = field
 	}
 
+
+
+	//hasmany functions
+$scope.addHeader = function(module){
+	if(module.display == undefined)
+		module.display = []
+	module.display.push({
+							header:"Heder Title",
+							name:"field_name",
+							filters:[]
+						})
+}
+	
+
 });
 formsapp.controller("formController",function($scope){
 	
