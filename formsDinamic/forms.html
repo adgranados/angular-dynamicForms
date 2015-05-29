@@ -213,9 +213,12 @@
 				</table>
 			</section>
 		</section>
-		<pre>
-			{{forms.fields|json}}
-		</pre>
+		<div>
+			<h3>campos</h3>
+			<pre>
+				{{forms|json}}
+			</pre>
+		</div>
 		<br/>
 		<hr/>
 		{{data}}<br/>
@@ -223,7 +226,7 @@
 			<h2>{{forms.name}}</h2>
 			<article ng-repeat="module in forms.modules" class="module">
 				<header ng-click="module.open = !module.open"> 
-					<h2>{{module.title}}</h2>
+					<h2>{{module.title}}  <span class="glyphicon glyphicon-list-alt" ng-if="module.type=='hasmany'">{{countData(data[module.data.model][module.data.name])}}<span ng-click="module.data.select = countData(data[module.data.model][module.data.name]) + 1">Add</span></span></h2>
 				</header>
 				<div ng-switch="module.type" ng-show="module.open">
 					<div ng-switch-when="basic">
@@ -293,11 +296,11 @@
 		{{data}}<br/>
 		<form name="form1" ng-submit="save()">
 			<h2>{{forms.name}}</h2>
-			<article ng-repeat="module in forms.modules" class="module">
-				<header ng-click="module.open = !module.open"> 
-					<h2>{{module.title}}</h2>
+			<article ng-repeat="module in forms.modules" class="panel panel-default">
+				<header class="panel-heading" ng-click="module.open = !module.open"> 
+					<h2>{{module.title}} <span ng-if="module.type=='hasmany'" class="badge">{{countData(data[module.data.model][module.data.name])}}<span> </h2>
 				</header>
-				<div ng-switch="module.type" ng-show="module.open">
+				<div ng-switch="module.type" ng-show="module.open" class="panel-body">
 					<div ng-switch-when="basic">
 						<div class="row" ng-repeat="row in module.fields.rows">	
 							<div  class="col-md-{{field.cols}}" ng-repeat="field in row">
@@ -319,6 +322,11 @@
 						</div>
 					</div>
 					<div ng-switch-when="hasmany">
+						<div class="row" >
+							<div class="col-md-12">
+								<span class=" glyphicon glyphicon-plus" ><a href="javascript:void(1)" ng-click="hasmanyAddNew(module)">New</a></span>
+							</div>
+						</div>
 						<div class="row" ng-repeat="row in module.fields.rows">	
 							<div  class="col-md-{{field.cols}}" ng-repeat="field in row">
 								<label ng-switch="field.type">
@@ -337,7 +345,7 @@
 								</label>
 							</div>
 						</div>
-						<table style="width:100%">
+						<table style="width:100%" class="table">
 							<thead>
 								<tr>
 									<th ng-repeat="display_col in module.display">{{display_col.header}}</th>

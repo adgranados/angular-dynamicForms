@@ -246,8 +246,12 @@ formsapp.controller("formController",function($scope){
 	$scope.save = function(){
 		alert(JSON.stringify($scope.data));
 	}
-
-
+	$scope.countData = function(ModuleData){
+		return Object.keys(ModuleData).length
+	}
+	$scope.hasmanyAddNew = function(module){
+		module.data.selected = $scope.countData($scope.data[module.data.model][module.data.name]) + 1
+	}
 	$scope.data={
 		persona:{
 				nombre:"Daniel",
